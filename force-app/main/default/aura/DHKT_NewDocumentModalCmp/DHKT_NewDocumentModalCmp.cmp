@@ -1,0 +1,152 @@
+<!--
+  @description       : 
+  @author            : Ba Truong Nguyen
+  @group             : 
+  @last modified on  : 03-24-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+<aura:component
+  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+>
+  <aura:html tag="style">
+    .slds-modal__container { min-width: 70%;outline:none;} .slds-modal {
+    outline:none;} slds-modal__content { min-height: 80%; box-shadow:
+    none!important;} .slds-modal__content.slds-p-around--medium { display:
+    contents; }
+    .slds-button__icon.slds-button__icon_large.slds-button_icon-inverse{color:transparent
+    !important;}
+    .slds-button.slds-button_icon.slds-modal__close.closeIcon.slds-button_icon-bare.slds-button_icon-inverse{display:none;}
+    .quick-actions-panel.slds-modal__content.slds-p-around--medium { display:
+    contents; }
+  </aura:html>
+  <aura:attribute name="isSaveAndNew" type="Boolean" default="false" />
+  <aura:attribute name="isModalOpen" type="Boolean" default="true" />
+  <aura:attribute name="itemVal" type="String" />
+  <aura:attribute name="isFirstLoad" type="Boolean" default="true" />
+  <aura:attribute name="calledFromRelatedList" type="Boolean" default="false" />
+  <aura:attribute name="parentRecordId" type="string" />
+  <aura:attribute name="recordId" type="string" />
+  <aura:attribute name="parent" type="Aura.Component" />
+  <aura:attribute
+    name="relatedFieldApiName"
+    type="String"
+    required="true"
+    default="Request__c"
+  />
+  <!-- <aura:handler name="init" value="{!this}" action="{!c.init}" /> -->
+
+  <div isTrue="{! v.isModalOpen}">
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      class="{! if(v.isModalOpen, 'slds-modal slds-fade-in-open ', 'slds-modal ')}"
+      aura:id="newModal"
+    >
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button
+            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+            title="Close"
+            onclick="{!c.onCancel}"
+          >
+            <lightning:icon
+              iconName="utility:close"
+              alternativeText="Close!"
+              title="Close"
+              variant="inverse"
+              size="small"
+            />
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <aura:if isTrue="{!v.recordId}">
+            <div class="slds-text-heading_medium">Edit Document</div>
+          </aura:if>
+          <aura:if isTrue="{! !v.recordId}">
+            <div class="slds-text-heading_medium">New Document</div>
+          </aura:if>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <div class="slds-m-around_large">
+            <lightning:recordEditForm
+              onsuccess="{!c.onCreateSuccess}"
+              onerror="{!c.onCreateError}"
+              aura:id="recordEditForm"
+              recordId="{!v.recordId}"
+              objectApiName="DHKT_Related_Documents__c"
+            >
+              <div class="slds-grid slds-wrap slds-form_stacked slds-form">
+                <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                  <lightning:inputField
+                    value="{!v.parentRecordId}"
+                    fieldName="{!v.relatedFieldApiName}"
+                    disabled="true"
+                    variant="label-stacked"
+                    class="slds-hide"
+                  />
+                </div>
+                <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                  <lightning:inputField
+                    value="{!v.documentType}"
+                    fieldName="Type__c"
+                    disabled="true"
+                    variant="label-stacked"
+                    class="slds-hide"
+                  />
+                </div>
+                <div class="slds-size--1-of-1 slds-p-horizontal_x-small">
+                  <p style="padding: 5px">
+                    <a>Document Folder</a>
+                  </p>
+                  <lightning:inputField
+                    aura:id="requiredField"
+                    fieldName="Document_URL__c"
+                    required="true"
+                    variant="label-stacked"
+                  />
+                </div>
+                <div class="slds-size--1-of-1 slds-p-horizontal_x-small">
+                  <lightning:inputField
+                    aura:id="field"
+                    fieldName="Description__c"
+                    variant="label-stacked"
+                  />
+                </div>
+              </div>
+            </lightning:recordEditForm>
+          </div>
+        </div>
+        <footer class="slds-modal__footer">
+          <lightning:buttonGroup class="slds-button-group-row">
+            <div class="slds-button-group-item">
+              <lightning:button
+                class="slds-theme_neutral"
+                iconPosition="left"
+                variant="neutral"
+                type="button"
+                label="Cancel"
+                onclick="{!c.onCancel}"
+              ></lightning:button>
+            </div>
+            <div class="slds-button-group-item">
+              <lightning:button
+                class="slds-theme_brand"
+                iconPosition="left"
+                variant="brand"
+                type="button"
+                label="Save"
+                onclick="{!c.onSave}"
+              ></lightning:button>
+            </div>
+          </lightning:buttonGroup>
+        </footer>
+      </div>
+    </section>
+    <aura:if isTrue="{! v.calledFromRelatedList}">
+      <div
+        aura:id="newBackdropModal"
+        class="{! if(v.isModalOpen, 'slds-backdrop slds-backdrop_open', 'slds-backdrop')}"
+      ></div>
+    </aura:if>
+  </div>
+</aura:component>

@@ -1,0 +1,179 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-24-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+<aura:component
+  implements="flexipage:availableForRecordHome,force:hasRecordId"
+  access="global"
+  controller="DHKT_FileUploadCtrl"
+>
+  <!--Attributes-->
+  <aura:attribute name="documentType" type="String" default="Document" />
+  <aura:attribute name="files" type="ContentDocument[]" />
+  <aura:attribute name="fileIds" type="String" />
+  <aura:attribute name="idObj" type="String" />
+  <aura:attribute name="fileHeaderText" type="String" default="Attachments" />
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="documentRecordId" type="String" />
+  <aura:attribute name="acceptFileTypes" type="String" />
+  <aura:attribute name="showFileHeader" type="Boolean" default="true" />
+  <aura:attribute name="uploadMultiple" type="Boolean" default="true" />
+  <aura:attribute name="onlyView" type="boolean" default="false" />
+  <aura:attribute name="showSpinner" type="boolean" default="false" />
+  <aura:attribute name="isModalOpen" type="Boolean" default="false" />
+  <!--Handlers-->
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.fileIds}" action="{!c.doInit}" />
+  <aura:method name="refreshParentView" action="{!c.reInit}" />
+
+  <aura:if isTrue="{!v.isModalOpen}">
+    <c:DHKT_NewDocumentModalCmp
+      isModalOpen="{!v.isModalOpen}"
+      parentRecordId="{!v.recordId}"
+      recordId="{!v.documentRecordId}"
+      relatedFieldApiName="{!v.relatedFieldApiName}"
+      documentType="{!v.documentType}"
+      parent="{! this }"
+    />
+  </aura:if>
+
+  <div class="slds-card slds-card_boundary">
+    <!-- show or hide header -->
+    <aura:if isTrue="{!v.showFileHeader}">
+      <div class="slds-page-header att-title">{!v.fileHeaderText}</div>
+    </aura:if>
+    <aura:if isTrue="{!not(v.onlyView)}">
+      <div class="slds-align_absolute-center slds-grid slds-wrap">
+        <div class="slds-size--1-of-1 slds-p-horizontal_x-small">
+          <p class="att-sub-title">Attach URL or Upload File</p>
+        </div>
+        <div
+          class="slds-size--1-of-1 slds-p-horizontal_x-small att-btn-wrapper"
+        >
+          <lightning:button
+            label="Attach URL"
+            iconName="utility:attach"
+            class="btn-attach"
+            onclick="{!c.openDocumentModal}"
+          />
+          <lightning:fileUpload
+            multiple="true"
+            recordId="{!v.recordId}"
+            onuploadfinished="{!c.uploadFinished}"
+          />
+        </div>
+      </div>
+      <br />
+    </aura:if>
+
+    <div class="slds-form--compound">
+      <table class="slds-table slds-table--bordered">
+        <aura:if isTrue="{!not(empty(v.files))}">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>File Type</th>
+              <th></th>
+            </tr>
+          </thead>
+        </aura:if>
+        <tbody>
+          <aura:iteration items="{!v.files}" var="f">
+            <tr>
+              <td>
+                <aura:if isTrue="{!f.FileType=='URL'}">
+                  <a href="{!f.DocumentURL}" target="_blank"> {!f.Title} </a>
+                </aura:if>
+                <aura:if isTrue="{!not(f.FileType=='URL')}">
+                  <a
+                    href="javascript:void(0)"
+                    id="{!f.Id}"
+                    onclick="{!c.previewFile}"
+                  >
+                    {!f.Title}
+                  </a>
+                </aura:if>
+              </td>
+              <td>{!f.FileType}</td>
+              <td>
+                <aura:if isTrue="{!not(v.onlyView)}">
+                  <aura:if isTrue="{!f.FileType=='URL'}">
+                    <a
+                      href="javascript:void(0)"
+                      id="{!f.Id}"
+                      title="Delete"
+                      onclick="{!c.deleteDocument}"
+                    >
+                      <lightning:icon
+                        size="x-small"
+                        iconName="utility:delete"
+                        alternativeText="Delete"
+                      />
+                    </a>
+                  </aura:if>
+                  <aura:if isTrue="{!not(f.FileType=='URL')}">
+                    <a
+                      href="javascript:void(0)"
+                      id="{!f.Id}"
+                      title="Delete"
+                      onclick="{!c.deleteSelectedFile}"
+                    >
+                      <lightning:icon
+                        size="x-small"
+                        iconName="utility:delete"
+                        alternativeText="Delete"
+                      />
+                    </a>
+                  </aura:if>
+                  <a
+                    href="{!f.detailsUrl}"
+                    target="_blank"
+                    title="View Details"
+                    style="margin-left: 5px"
+                  >
+                    <lightning:icon
+                      size="x-small"
+                      iconName="utility:preview"
+                      alternativeText="View Details"
+                    />
+                  </a>
+                  <aura:if isTrue="{!f.FileType=='URL'}">
+                    <a
+                      href="javascript:void(0)"
+                      id="{!f.Id}"
+                      title="Edit"
+                      onclick="{!c.editDocument}"
+                      style="margin-left: 5px"
+                    >
+                      <lightning:icon
+                        size="x-small"
+                        iconName="utility:edit"
+                        alternativeText="Edit"
+                      />
+                    </a>
+                  </aura:if>
+                </aura:if>
+              </td>
+            </tr>
+          </aura:iteration>
+        </tbody>
+      </table>
+      <!-- show spinner logo when needed -->
+      <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container">
+          <div
+            class="slds-spinner slds-spinner--medium"
+            aria-hidden="false"
+            role="alert"
+          >
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+          </div>
+        </div>
+      </aura:if>
+    </div>
+  </div>
+</aura:component>

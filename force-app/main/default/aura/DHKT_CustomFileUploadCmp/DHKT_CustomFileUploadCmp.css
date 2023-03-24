@@ -1,0 +1,23 @@
+.THIS .btn-attach {
+  margin-right: 5px;
+  margin-top: 20px;
+}
+
+.THIS .att-sub-title {
+  text-align: center;
+  margin: 10px 0 -10px;
+}
+
+.THIS .slds-size--1-of-1.slds-p-horizontal_x-small.att-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.THIS .slds-page-header.att-title {
+  background: none;
+  font-size: 1rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
