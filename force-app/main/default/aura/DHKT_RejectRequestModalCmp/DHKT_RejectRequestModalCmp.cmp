@@ -1,0 +1,80 @@
+<!--
+  @description       : 
+  @author            : Ba Truong Nguyen
+  @group             : 
+  @last modified on  : 03-25-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+
+<aura:component
+  implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,flexipage:availableForAllPageTypes"
+  access="global"
+  controller="DHKT_ActionRequestController"
+>
+  <aura:html aura:id="discardModalStyle" tag="style">
+    .slds-modal__container { width: 800px; max-width: 800px; min-width: 800px;}
+  </aura:html>
+  <aura:attribute name="recordId" type="string" />
+  <aura:attribute name="reason" type="string" />
+  <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+  <section
+    style="outline: none"
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
+    class="slds-modal slds-fade-in-open"
+  >
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <button
+          class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+          title="Close"
+          onclick="{!c.handleExit}"
+        >
+          <span class="slds-assistive-text">Close</span>
+        </button>
+        <div class="slds-text-heading_medium">Reject Request</div>
+      </header>
+      <div class="slds-modal__content slds-p-around_medium">
+        <div class="slds-m-around_medium">
+          <div style="font-size: 0.8125rem">
+            <p>Reject Reason</p>
+          </div>
+          <lightning:textarea
+            label="Discard Reason"
+            placeholder="Placeholder Text"
+            variant="label-hidden"
+            required="true"
+            aura:id="reason"
+            value="{!v.reason}"
+          ></lightning:textarea>
+        </div>
+      </div>
+      <footer class="slds-modal__footer">
+        <lightning:buttonGroup class="slds-button-group-row">
+          <div class="slds-button-group-item">
+            <lightning:button
+              class="slds-theme_neutral"
+              iconPosition="left"
+              variant="neutral"
+              type="button"
+              onclick="{!c.handleExit}"
+              label="Cancel"
+            ></lightning:button>
+          </div>
+          <div class="slds-button-group-item">
+            <lightning:button
+              class="slds-theme_brand"
+              iconPosition="left"
+              variant="brand"
+              type="button"
+              onclick="{!c.handleReject}"
+              label="Reject"
+            ></lightning:button>
+          </div>
+        </lightning:buttonGroup>
+      </footer>
+    </div>
+  </section>
+</aura:component>

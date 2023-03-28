@@ -1,3 +1,22 @@
-<design:component >
-
+<design:component>
+  <design:attribute
+    name="relatedFieldApiName"
+    label="Name of lookup or master-detail field on Document sobject"
+    description="Name of lookup or master-detail field on Document sobject"
+  />
+  <design:attribute
+    name="recordId"
+    label="Id of parent record"
+    description="Id of parent record"
+  />
+  <design:attribute
+    name="fileHeaderText"
+    label="Header Text"
+    description="Header Text"
+  />
+  <design:attribute
+    name="documentType"
+    label="Document Type"
+    description="Document Type such as Relevant Documents or Sketch"
+  />
 </design:component>

@@ -1,0 +1,37 @@
+<!--
+  @description       : 
+  @author            : Ba Truong Nguyen
+  @group             : 
+  @last modified on  : 03-25-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+<aura:component
+  implements="flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName"
+>
+  <lightning:recordViewForm
+    recordId="{!v.recordId}"
+    aura:id="recordViewForm"
+    objectApiName="{!v.sObjectName}"
+  >
+    <div class="slds-grid slds-wrap">
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small">
+        <lightning:outputField fieldName="Request_Type__c" />
+      </div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small">
+        <lightning:outputField fieldName="Request_Header__c" />
+      </div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small">
+        <lightning:outputField fieldName="Request_Status__c" />
+      </div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small">
+        <lightning:outputField fieldName="Submitting_Date__c" />
+      </div>
+    </div>
+    <div class="slds-grid slds-wrap">
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small"></div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small"></div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small"></div>
+      <div class="slds-size--1-of-4 slds-p-horizontal_x-small"></div>
+    </div>
+  </lightning:recordViewForm>
+</aura:component>

@@ -16,31 +16,21 @@
     });
     action.setCallback(this, function (response) {
       var state = response.getState();
-      console.log("getUploadedFiles 444: " + JSON.stringify(state));
       if (state == "SUCCESS") {
         var result = response.getReturnValue();
         var fileIds = [];
         if (result) {
           result.forEach((item) => {
-            if (item.FileType != "URL") {
-              item.detailsUrl =
-                "/lightning/r/ContentDocument/" + item.Id + "/view";
-              component.set("v.idObj", item.DocumentId);
-              fileIds.push(item.Id);
-            } else {
-              item.detailsUrl =
-                "/lightning/r/DHKT_Related_Documents__c/" + item.Id + "/view";
-              component.set("v.idObj", null);
-            }
+            item.detailsUrl =
+              "/lightning/r/ContentDocument/" + item.Id + "/view";
+            component.set("v.idObj", item.DocumentId);
+            fileIds.push(item.Id);
           });
         }
-        console.log("result: ", result);
         component.set("v.files", result);
-        console.log("fileIds: ", fileIds);
         if (fileIds.length > 0) {
           var strfileIds = fileIds.join(",");
           strfileIds += ",";
-          console.log("strfileIds: ", strfileIds);
           component.set("v.fileIds", strfileIds);
         } else {
           component.set("v.fileIds", "");
@@ -64,12 +54,8 @@
       var state = response.getState();
       if (state == "SUCCESS") {
         var fileIds = component.get("v.fileIds");
-        console.log("fileIds: " + fileIds);
-        console.log('event.currentTarget.id + ",": ' + deleteId + ",");
         fileIds = fileIds.replace(deleteId + ",", "");
-        console.log("fileIds: " + fileIds);
         component.set("v.fileIds", fileIds);
-        this.saveFileIds(component, event);
         component.set("v.showSpinner", false);
         // show toast on file deleted successfully
         var toastEvent = $A.get("e.force:showToast");
@@ -103,9 +89,7 @@
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (state === "SUCCESS") {
-        console.log("------ Save saveFileIds success");
         this.getUploadedFiles(component, event);
-        console.log("--- saveFileIds End");
       } else if (state === "ERROR") {
         console.log(
           "------ Save saveFileIds ERROR: " +
@@ -126,7 +110,6 @@
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (state == "SUCCESS") {
-        this.saveFileIds(component, event);
         component.set("v.showSpinner", false);
         // show toast on file deleted successfully
         var toastEvent = $A.get("e.force:showToast");

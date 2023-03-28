@@ -1,3 +1,13 @@
-<aura:component>
-
-</aura:component>	
+<!--
+  @description       : 
+  @author            : Ba Truong Nguyen
+  @group             : 
+  @last modified on  : 03-25-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+<aura:component
+  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride"
+  access="global"
+  controller="DHKT_RequestController"
+>
+</aura:component>

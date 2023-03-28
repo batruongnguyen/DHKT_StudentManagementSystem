@@ -2,7 +2,7 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 03-24-2023
+  @last modified on  : 03-25-2023
   @last modified by  : Ba Truong Nguyen
 -->
 <aura:component
@@ -24,6 +24,22 @@
   <aura:attribute name="onlyView" type="boolean" default="false" />
   <aura:attribute name="showSpinner" type="boolean" default="false" />
   <aura:attribute name="isModalOpen" type="Boolean" default="false" />
+  <aura:attribute
+    name="relatedFieldApiName"
+    type="String"
+    required="true"
+    default="Request__c"
+  />
+
+  <aura:attribute name="reqRecord" type="Object" />
+  <force:recordData
+    aura:id="recordLoader"
+    recordId="{!v.recordId}"
+    fields="Request_Status__c"
+    targetFields="{!v.reqRecord}"
+    recordUpdated="{!c.reqRecordUpdated}"
+  />
+
   <!--Handlers-->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler name="change" value="{!v.fileIds}" action="{!c.doInit}" />
@@ -45,20 +61,14 @@
     <aura:if isTrue="{!v.showFileHeader}">
       <div class="slds-page-header att-title">{!v.fileHeaderText}</div>
     </aura:if>
-    <aura:if isTrue="{!not(v.onlyView)}">
+    <aura:if isTrue="{!v.reqRecord.Request_Status__c == 'New'}">
       <div class="slds-align_absolute-center slds-grid slds-wrap">
         <div class="slds-size--1-of-1 slds-p-horizontal_x-small">
-          <p class="att-sub-title">Attach URL or Upload File</p>
+          <p class="att-sub-title">Upload File</p>
         </div>
         <div
           class="slds-size--1-of-1 slds-p-horizontal_x-small att-btn-wrapper"
         >
-          <lightning:button
-            label="Attach URL"
-            iconName="utility:attach"
-            class="btn-attach"
-            onclick="{!c.openDocumentModal}"
-          />
           <lightning:fileUpload
             multiple="true"
             recordId="{!v.recordId}"

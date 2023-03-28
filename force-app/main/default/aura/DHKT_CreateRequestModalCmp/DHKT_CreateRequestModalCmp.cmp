@@ -1,0 +1,155 @@
+<!--
+  @description       : 
+  @author            : Ba Truong Nguyen
+  @group             : 
+  @last modified on  : 03-26-2023
+  @last modified by  : Ba Truong Nguyen
+-->
+<aura:component
+  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride"
+  access="global"
+  controller="DHKT_RequestController"
+>
+  <!-- Attribute -->
+  <aura:attribute name="requestRecords" type="Object" />
+  <aura:attribute name="currentUserData" type="Object" />
+  <aura:attribute name="requestHeader" type="String" />
+  <aura:attribute name="claimRequestHeaders" type="List" />
+  <aura:attribute name="claimRequestTypes" type="List" />
+  <aura:attribute name="selectedRequestType" type="String" />
+  <aura:attribute name="selectedRequestHeader" type="String" />
+
+  <!-- Method -->
+
+  <!-- Handler -->
+  <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+  <force:recordData
+    aura:id="requestLoader"
+    recordId="{!v.recordId}"
+    fields="Name, Student__c"
+    targetFields="{!v.requestRecords}"
+    recordUpdated="{!c.requestRecordUpdated}"
+  />
+
+  <div class="slds-modal__container slds-bottom large">
+    <!-- HEADER -->
+    <header class="slds-modal__header">
+      <button
+        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+        title="Close"
+        onclick="{!c.onCancel}"
+      >
+        <lightning:icon
+          iconName="utility:close"
+          alternativeText="Close!"
+          title="Close"
+          variant="inverse"
+          size="small"
+        />
+        <span class="slds-assistive-text">Close</span>
+      </button>
+      <aura:if isTrue="{!v.recordId}">
+        <div class="slds-text-heading_medium">Edit Request</div>
+      </aura:if>
+      <aura:if isTrue="{! !v.recordId}">
+        <div class="slds-text-heading_medium">Create New Request</div>
+      </aura:if>
+    </header>
+
+    <!-- BODY -->
+    <div class="slds-modal__content slds-p-around_medium">
+      <div class="slds-m-around_large">
+        <lightning:recordEditForm
+          onload="{!c.onRecordLoad}"
+          onsuccess="{!c.onCreateSuccess}"
+          onerror="{!c.onCreateError}"
+          aura:id="recordEditForm"
+          recordId="{!v.recordId}"
+          objectApiName="DHKT_Request__c"
+        >
+          <div class="slds-grid slds-wrap slds-form_stacked slds-form">
+            <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+              <lightning:inputField
+                fieldName="Request_Type__c"
+                value="{!v.selectedRequestType}"
+                disabled="{!v.recordId}"
+              />
+              <aura:if isTrue="{! !v.recordId}">
+                <lightning:inputField
+                  fieldName="Student__c"
+                  value="{!v.currentUserData.Id}"
+                  class="slds-hide"
+                />
+              </aura:if>
+              <lightning:input
+                label="Student Name"
+                value="{!v.currentUserData.Student_Name__c}"
+                disabled="true"
+                variant="label-hide"
+              />
+              <lightning:input
+                label="Day of Birth"
+                value="{!v.currentUserData.Date_of_Birth__c}"
+                disabled="true"
+              />
+              <lightning:input
+                label="Student Id"
+                value="{!v.currentUserData.Name}"
+                disabled="true"
+              />
+            </div>
+            <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+              <lightning:inputField
+                fieldName="Request_Header__c"
+                value="{!v.selectedRequestHeader}"
+                disabled="{!v.recordId}"
+              />
+              <!-- <lightning:input
+                label="Class"
+                value="{!v.currentUserData.Class__c}"
+                disabled="true"
+              /> -->
+              <lightning:input
+                label="Phone Number"
+                value="{!v.currentUserData.Phone_Number__c}"
+                disabled="true"
+              />
+              <lightning:input
+                label="Email"
+                value="{!v.currentUserData.Email__c}"
+                disabled="true"
+              />
+            </div>
+          </div>
+        </lightning:recordEditForm>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="slds-modal__footer">
+      <lightning:buttonGroup class="slds-button-group-row">
+        <div class="slds-button-group-item">
+          <lightning:button
+            class="slds-theme_neutral"
+            iconPosition="left"
+            variant="neutral"
+            type="button"
+            label="Cancel"
+            onclick="{!c.onCancel}"
+          ></lightning:button>
+        </div>
+        <div class="slds-button-group-item">
+          <lightning:button
+            class="slds-theme_brand"
+            iconPosition="left"
+            variant="brand"
+            type="button"
+            label="Save"
+            onclick="{!c.onSave}"
+          ></lightning:button>
+        </div>
+      </lightning:buttonGroup>
+    </footer>
+  </div>
+</aura:component>

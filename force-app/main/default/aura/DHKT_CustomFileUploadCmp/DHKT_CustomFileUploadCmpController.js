@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-24-2023
+ * @last modified on  : 03-25-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -10,7 +10,9 @@
     console.log("recordId: ", component.get("v.recordId"));
     helper.getUploadedFiles(component, event);
   },
-
+  reqRecordUpdated: function (cmp, event, helper) {
+    console.log("reqRecordUpdated...");
+  },
   previewFile: function (component, event, helper) {
     $A.get("e.lightning:openFiles").fire({
       recordIds: [event.currentTarget.id]
@@ -34,10 +36,6 @@
     }
     console.log("fileIds: " + fileIds);
     component.set("v.fileIds", fileIds);
-
-    // var documentId = uploadedFiles[0].documentId;
-    // var fileName = uploadedFiles[0].name;
-
     helper.saveFileIds(component, event);
 
     var toastEvent = $A.get("e.force:showToast");
