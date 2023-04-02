@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-25-2023
+ * @last modified on  : 04-01-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 public with sharing class DHKT_ActionRequestController {
@@ -31,19 +31,18 @@ public with sharing class DHKT_ActionRequestController {
   }
 
   @AuraEnabled
-  public static String handleApproveRequest(Id requestId, String note) {
+  public static String handleApproveRequest(Id requestId) {
     String error = null;
 
     try {
       DHKT_Request__c req = [
-        SELECT Id, Name, Request_Status__c, Note__c
+        SELECT Id, Name, Request_Status__c
         FROM DHKT_Request__c
         WHERE Id = :requestId
       ];
 
       if (req != null) {
         req.Request_Status__c = 'Approved';
-        req.Note__c = note;
 
         update req;
       }
@@ -72,6 +71,29 @@ public with sharing class DHKT_ActionRequestController {
       }
     } catch (Exception e) {
       error = 'Failed to reject Request. Error: ' + e.getMessage();
+    }
+    return error;
+  }
+
+  @AuraEnabled
+  public static String handleFinalizedRequest(Id requestId) {
+    String error = null;
+
+    try {
+      DHKT_Request__c req = [
+        SELECT Id, Name, Request_Status__c, Submitting_Date__c
+        FROM DHKT_Request__c
+        WHERE Id = :requestId
+      ];
+
+      if (req != null) {
+        Date todaysDate = System.Today();
+        req.Request_Status__c = 'Finalized';
+
+        update req;
+      }
+    } catch (Exception e) {
+      error = 'Failed to finalized Request. Error: ' + e.getMessage();
     }
     return error;
   }

@@ -2,12 +2,293 @@
   @description       : 
   @author            : Ba Truong Nguyen
   @group             : 
-  @last modified on  : 03-25-2023
+  @last modified on  : 04-01-2023
   @last modified by  : Ba Truong Nguyen
 -->
 <aura:component
-  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride"
+  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride,force:hasSObjectName"
   access="global"
   controller="DHKT_RequestController"
 >
+  <aura:attribute name="responseData" type="Object" />
+  <aura:attribute name="isEditPage" type="Boolean" default="false" />
+  <aura:attribute name="isShowRequestInfo" type="Boolean" default="false" />
+  <aura:attribute name="isGraduateInternship" type="Boolean" default="false" />
+  <aura:attribute name="note" type="String" />
+  <aura:attribute name="facilityOptions" type="List" default="[]" />
+  <aura:attribute name="facilities" type="List" default="[]" />
+  <aura:attribute
+    name="activeSections"
+    type="List"
+    default="['studentInformation', 'requestInformation']"
+  />
+
+  <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+  <force:recordData
+    aura:id="requestLoader"
+    recordId="{!v.recordId}"
+    fields="Name, Student__c, Student__r.Name, Request_Type__c, Request_Status__c"
+    targetFields="{!v.requestRecords}"
+    recordUpdated="{!c.requestRecordUpdated}"
+  />
+  <aura:if isTrue="{!v.responseData.Request_Status__c == 'Rejected'}">
+    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+      <span class="slds-assistive-text">warning</span>
+      <h2>
+        <strong>Reject Reason: {!v.responseData.Reject_Reason__c}</strong>
+      </h2>
+    </div>
+  </aura:if>
+  <lightning:recordEditForm
+    onload="{!c.onRecordLoad}"
+    onsuccess="{!c.onCreateSuccess}"
+    onerror="{!c.onCreateError}"
+    aura:id="recordEditForm"
+    recordId="{!v.recordId}"
+    objectApiName="DHKT_Request__c"
+  >
+    <lightning:accordion
+      allowMultipleSectionsOpen="true"
+      activeSectionName="{! v.activeSections }"
+    >
+      <lightning:accordionSection
+        name="studentInformation"
+        label="Student Information"
+      >
+        <div class="slds-grid slds-wrap">
+          <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+            <lightning:outputField fieldName="Student__c" />
+            <lightning:outputField fieldName="Faculty_Name__c" />
+            <lightning:outputField fieldName="Day_of_Birth__c" />
+            <lightning:outputField fieldName="Email__c" />
+          </div>
+          <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+            <lightning:outputField fieldName="Student_Name__c" />
+            <lightning:outputField fieldName="Class_Name__c" />
+            <lightning:outputField fieldName="Phone_Number__c" />
+            <lightning:outputField fieldName="CreatedDate" />
+          </div>
+        </div>
+      </lightning:accordionSection>
+
+      <aura:if isTrue="{!v.isShowRequestInfo}">
+        <lightning:accordionSection
+          name="requestInformation"
+          label="Request Information"
+        >
+          <!-- This section for Study Request -->
+          <aura:if
+            isTrue="{!v.responseData.Request_Type__c == 'Study Request'}"
+          >
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                <lightning:inputField
+                  fieldName="Reason__c"
+                  disabled="{!!v.isEditPage}"
+                />
+              </div>
+              <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                <label class="slds-form-element__label"
+                  >Semester of Temporary Dismissal</label
+                >
+                <lightning:inputField
+                  fieldName="Note__c"
+                  value="{!v.note}"
+                  class="{!if(v.isEditPage, slds-hide, '')}"
+                  disabled="{!!v.isEditPage}"
+                  variant="label-hidden"
+                />
+              </div>
+            </div>
+          </aura:if>
+
+          <!-- This section for Recognition Request -->
+          <aura:if
+            isTrue="{!v.responseData.Request_Type__c == 'Recognition Request'}"
+          >
+            <div class="slds-grid slds-wrap">
+              <aura:if isTrue="{!v.isGraduateInternship}">
+                <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                  <lightning:inputField
+                    fieldName="Cumulative_Credits__c"
+                    disabled="{!!v.isEditPage}"
+                  />
+                  <lightning:inputField
+                    fieldName="Report_Registration_Method__c"
+                    disabled="{!!v.isEditPage}"
+                  />
+                </div>
+                <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                  <label class="slds-form-element__label"
+                    >Uncompleted Credits</label
+                  >
+                  <lightning:inputField
+                    fieldName="Note__c"
+                    value="{!v.note}"
+                    disabled="{!!v.isEditPage}"
+                    variant="label-hidden"
+                  />
+                </div>
+
+                <aura:set attribute="else">
+                  <lightning:inputField
+                    fieldName="Note__c"
+                    value="{!v.note}"
+                    disabled="{!!v.isEditPage}"
+                  />
+                  <b>
+                    Please attach a word version at the Relevant Document tab
+                    with the following information: number of credits, grades,
+                    letter grades
+                  </b>
+                </aura:set>
+              </aura:if>
+            </div>
+          </aura:if>
+
+          <!-- This section for Facility Request -->
+          <aura:if
+            isTrue="{!v.responseData.Request_Type__c == 'Facility Request'}"
+          >
+            <table
+              class="slds-table slds-card slds-card_boundary slds-table_bordered slds-table_col-bordered slds-no-row-hover slds-no-row-hover"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <div class="slds-truncate">Facility Code</div>
+                  </th>
+                  <th>
+                    <div class="slds-truncate">Facility Name</div>
+                  </th>
+                  <th>
+                    <div class="slds-truncate">Zone Area</div>
+                  </th>
+                  <th>
+                    <div class="slds-truncate">Classroom</div>
+                  </th>
+                  <th class="padding-header-size slds-cell-wrap">
+                    <span class="slds-truncate return-items-header"></span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration
+                  items="{!v.facilities}"
+                  var="facility"
+                  indexVar="index"
+                >
+                  <tr>
+                    <td class="slds-text-align_left">
+                      <lightning:combobox
+                        name="{!index}"
+                        options="{!v.facilityOptions}"
+                        value="{!facility.Facility_Code__c}"
+                        variant="label-hidden"
+                        onchange="{!c.onChangeFacilityCode}"
+                        disabled="{!!v.isEditPage}"
+                      />
+                    </td>
+                    <td class="slds-text-align_left">
+                      <lightning:formattedText
+                        value="{!facility.Facility_Name__c}"
+                      />
+                    </td>
+                    <td class="slds-text-align_left">
+                      <lightning:formattedText
+                        value="{!facility.Zone_Area__c}"
+                      />
+                    </td>
+                    <td class="slds-text-align_left">
+                      <lightning:formattedText
+                        value="{!facility.Classroom__c}"
+                      />
+                    </td>
+                    <td class="slds-text-align_center">
+                      <aura:if isTrue="{!v.isEditPage}">
+                        <lightning:buttonIcon
+                          iconName="utility:delete"
+                          onclick="{! c.onRemoveFacility }"
+                          alternativeText="Delete"
+                          title="Delete"
+                          value="{!index}"
+                          variant="bare"
+                          class="btn-delete"
+                        />
+                      </aura:if>
+                    </td>
+                  </tr>
+                </aura:iteration>
+                <tr>
+                  <td>
+                    <aura:if isTrue="{!v.isEditPage}">
+                      <lightning:button
+                        variant="neutral"
+                        iconName="utility:add"
+                        label="Add"
+                        onclick="{!c.onAddFacility}"
+                      />
+                    </aura:if>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- This section for Account Request -->
+          <aura:if
+            isTrue="{!v.responseData.Request_Type__c == 'Account Request'}"
+          >
+            <div class="slds-grid slds-wrap">
+              <lightning:inputField
+                fieldName="Reason__c"
+                disabled="{!!v.isEditPage}"
+              />
+              <lightning:inputField
+                fieldName="Note__c"
+                disabled="{!!v.isEditPage}"
+              />
+            </div>
+          </aura:if>
+        </lightning:accordionSection>
+      </aura:if>
+    </lightning:accordion>
+
+    <!-- Footer -->
+    <lightning:layout
+      class="slds-var-m-top_medium slds-grid slds-grid_align-end"
+      horizontalAlign="spread"
+    >
+      <aura:if isTrue="{!and(v.isEditPage, v.isShowRequestInfo)}">
+        <lightning:layoutItem class="slds-col">
+          <lightning:buttonGroup class="slds-button-group-row">
+            <div class="slds-button-group-item">
+              <lightning:button
+                iconPosition="left"
+                variant="neutral"
+                type="button"
+                label="Cancel"
+                onclick="{!c.onCancelClick}"
+              />
+            </div>
+            <div class="slds-button-group-item">
+              <lightning:button
+                iconPosition="left"
+                variant="neutral"
+                type="button"
+                label="Save"
+                onclick="{!c.onSaveClick}"
+              />
+            </div>
+          </lightning:buttonGroup>
+        </lightning:layoutItem>
+      </aura:if>
+    </lightning:layout>
+    <div class="slds-var-p-bottom_large"></div>
+  </lightning:recordEditForm>
 </aura:component>

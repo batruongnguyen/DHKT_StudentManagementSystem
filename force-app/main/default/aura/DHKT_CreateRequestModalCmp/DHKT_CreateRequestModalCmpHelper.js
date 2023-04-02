@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-25-2023
+ * @last modified on  : 04-02-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -43,6 +43,7 @@
     action.setCallback(this, function (response) {
       var state = response.getState();
       console.log("currentUserData: ", response.getReturnValue());
+      console.log("state: ", state);
       if (state === "SUCCESS") {
         var currentUserData = response.getReturnValue();
         cmp.set("v.currentUserData", currentUserData);

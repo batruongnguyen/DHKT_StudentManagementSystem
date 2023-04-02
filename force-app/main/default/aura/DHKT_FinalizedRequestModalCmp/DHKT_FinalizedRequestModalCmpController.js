@@ -10,9 +10,11 @@
     var recordId = cmp.get("v.recordId");
     console.log("recordId: ", recordId);
   },
-  handleApprove: function (cmp, event, helper) {
+  handleFinalized: function (cmp, event, helper) {
     var recordId = cmp.get("v.recordId");
-    var action = cmp.get("c.handleApproveRequest");
+    console.log("recordId: ", recordId);
+
+    var action = cmp.get("c.handleFinalizedRequest");
     action.setParams({
       requestId: recordId
     });

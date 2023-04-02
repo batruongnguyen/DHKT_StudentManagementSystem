@@ -33,13 +33,13 @@
         >
           <span class="slds-assistive-text">Close</span>
         </button>
-        <div class="slds-text-heading_medium">Approve Request</div>
+        <div class="slds-text-heading_medium">Finalized Request</div>
       </header>
-      <div class="slds-modal__content slds-text-align_center">
-        <div class="slds-m-around_medium">
-          <div style="font-size: 0.8125rem">
-            <p>Are you sure you want to approve this request?</p>
-          </div>
+      <div
+        class="slds-modal__content slds-p-around_medium slds-text-align_center"
+      >
+        <div style="font-size: 0.8125rem">
+          <p>Are you sure you want to finalized this request?</p>
         </div>
       </div>
       <footer class="slds-modal__footer">
@@ -60,8 +60,8 @@
               iconPosition="left"
               variant="brand"
               type="button"
-              onclick="{!c.handleApprove}"
-              label="Approve"
+              onclick="{!c.handleFinalized}"
+              label="Submit"
             ></lightning:button>
           </div>
         </lightning:buttonGroup>

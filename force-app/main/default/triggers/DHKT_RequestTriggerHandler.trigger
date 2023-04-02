@@ -2,38 +2,35 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-25-2023
+ * @last modified on  : 04-01-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 trigger DHKT_RequestTriggerHandler on DHKT_Request__c(after update) {
   if (Trigger.isUpdate) {
-    List<User> systemUsers = [
-      SELECT id
-      FROM User
-      WHERE Profile.UserLicense.Name = 'Salesforce' AND IsActive = TRUE
+    DHKT_Request__c reqs = [
+      SELECT CreatedById, LastModifiedById
+      FROM DHKT_Request__c
+      WHERE Id = :Trigger.new[0].Id
     ];
     Set<String> userIds = new Set<String>();
-    for (User user : systemUsers) {
-      userIds.add(user.Id);
-    }
+    userIds.add(reqs.CreatedById);
 
     for (DHKT_Request__c req : Trigger.new) {
       if (
         req.Request_Status__c == 'Approved' ||
-        req.Request_Status__c == 'Rejected'
+        req.Request_Status__c == 'Rejected' ||
+        req.Request_Status__c == 'Finalized'
       ) {
         String currentUser =
           UserInfo.getFirstName() +
           ' ' +
           UserInfo.getLastName();
-        String status = req.Request_Status__c == 'Approved'
-          ? 'approved'
-          : 'rejected';
+        String status = req.Request_Status__c;
         String body =
           'Request ' +
           req.Name +
           ' was ' +
-          status +
+          status.toLowerCase() +
           ' by ' +
           currentUser;
 

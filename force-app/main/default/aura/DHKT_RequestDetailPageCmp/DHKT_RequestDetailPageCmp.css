@@ -1,2 +1,25 @@
-.THIS {
+.THIS .slds-button.slds-accordion__summary-action {
+  background: #f3f2f2;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  padding: 5px 0.5rem;
+}
+
+.THIS .slds-accordion__list-item {
+  border-top: 1px solid #fff;
+  margin-top: 20px;
+}
+
+.THIS .slds-accordion__summary-action:hover,
+.THIS .slds-accordion__summary-action:focus {
+  color: #080707 !important;
+}
+
+.THIS .slds-accordion__summary-heading .slds-button:focus {
+  text-decoration: none !important;
+}
+
+.THIS .slds-accordion__content {
+  padding-top: 10px !important;
+  margin: 0 -15px 0 -15px !important;
 }
