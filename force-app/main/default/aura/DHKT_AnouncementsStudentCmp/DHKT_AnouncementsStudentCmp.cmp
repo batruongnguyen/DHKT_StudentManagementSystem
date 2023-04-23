@@ -2,7 +2,7 @@
   @description       : 
   @author            : Ba Truong Nguyen
   @group             : 
-  @last modified on  : 04-02-2023
+  @last modified on  : 04-16-2023
   @last modified by  : Ba Truong Nguyen
 -->
 <aura:component
@@ -54,8 +54,12 @@
           <aura:iteration
             items="{!v.notifications.classNotifications}"
             var="item"
+            indexVar="index"
           >
             <div class="slds-m-around_small">
+              <p class="slds-text-title_bold" style="font-size: 1rem">
+                Notification #{!index}
+              </p>
               <p class="slds-text-title_bold" style="font-size: 1rem">
                 {!item.Title__c}
               </p>

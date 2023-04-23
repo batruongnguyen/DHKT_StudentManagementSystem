@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-02-2023
+ * @last modified on  : 04-23-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -22,22 +22,6 @@
       urlEvent.fire();
     }
   },
-  showToast: function (type, message) {
-    var toastEvent = $A.get("e.force:showToast");
-    toastEvent.setParams({
-      type,
-      message
-    });
-    toastEvent.fire();
-  },
-  validate: function (cmp) {
-    var isValid = true;
-    var inputFields = cmp.find("inputField");
-    for (var i = 0; i < inputFields.length; i++) {
-      isValid = inputFields[i].reportValidity() && isValid;
-    }
-    return isValid;
-  },
   getCurrentUserData: function (cmp, event, helper) {
     var action = cmp.get("c.getCurrentUserData");
     action.setCallback(this, function (response) {
@@ -52,6 +36,22 @@
       }
     });
     $A.enqueueAction(action);
+  },
+  validate: function (cmp) {
+    var isValid = true;
+    var inputFields = cmp.find("inputField");
+    for (var i = 0; i < inputFields.length; i++) {
+      isValid = inputFields[i].reportValidity() && isValid;
+    }
+    return isValid;
+  },
+  showToast: function (type, message) {
+    var toastEvent = $A.get("e.force:showToast");
+    toastEvent.setParams({
+      type,
+      message
+    });
+    toastEvent.fire();
   },
   onClose: function (cmp, event, helper) {
     var dismissActionPanel = $A.get("e.force:closeQuickAction");

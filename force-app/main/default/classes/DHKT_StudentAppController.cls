@@ -2,10 +2,10 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-02-2023
+ * @last modified on  : 04-16-2023
  * @last modified by  : Ba Truong Nguyen
  **/
-public with sharing class DHKT_StudentAppController {
+public without sharing class DHKT_StudentAppController {
   @AuraEnabled
   public static String getStudentInfoForCurrentUser() {
     try {
@@ -14,7 +14,6 @@ public with sharing class DHKT_StudentAppController {
         SELECT Id, Name, Profile.Name, Email
         FROM User
         WHERE Id = :currentUserId
-        WITH SECURITY_ENFORCED
       ];
       String studentName = '%' + currentUser?.Name + '%';
 
@@ -30,7 +29,6 @@ public with sharing class DHKT_StudentAppController {
           Phone_Number__c,
           Email__c,
           Student_Name__c,
-          Subject__c,
           CreatedById,
           (
             SELECT
@@ -54,7 +52,6 @@ public with sharing class DHKT_StudentAppController {
               Student_Name__c,
               Phone_Number__c,
               Email__c,
-              Subject__c,
               Reason__c,
               Cumulative_Credits__c,
               Report_Registration_Method__c,
@@ -79,7 +76,7 @@ public with sharing class DHKT_StudentAppController {
       DHKT_Student__c student = DHKT_RequestController.getCurrentUserData();
 
       Notification notifications = new Notification();
-      List<DHKT_Notification__c> lsNotificationQueried = [
+      List<DHKT_Notification__c> notificationQueries = [
         SELECT
           Id,
           Name,
@@ -102,7 +99,7 @@ public with sharing class DHKT_StudentAppController {
       List<DHKT_Notification__c> facultyNotifications = new List<DHKT_Notification__c>();
       List<DHKT_Notification__c> classNotifications = new List<DHKT_Notification__c>();
       List<DHKT_Notification__c> personalNotifications = new List<DHKT_Notification__c>();
-      for (DHKT_Notification__c noti : lsNotificationQueried) {
+      for (DHKT_Notification__c noti : notificationQueries) {
         if (noti.Faculty__c == student.Faculty__c) {
           facultyNotifications.add(noti);
         } else if (noti.Activity_Class__c == student.Activity_Class__c) {

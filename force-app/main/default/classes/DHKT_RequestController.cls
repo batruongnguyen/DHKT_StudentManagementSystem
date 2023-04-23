@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-02-2023
+ * @last modified on  : 04-13-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 public with sharing class DHKT_RequestController {
@@ -107,8 +107,7 @@ public with sharing class DHKT_RequestController {
           Date_of_Birth__c,
           Phone_Number__c,
           Email__c,
-          Student_Name__c,
-          Subject__c
+          Student_Name__c
         FROM DHKT_Student__c
         WHERE Email__c = :currentUser.Email
         ORDER BY CreatedDate DESC

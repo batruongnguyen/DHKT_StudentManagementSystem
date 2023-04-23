@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-28-2023
+ * @last modified on  : 04-13-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 trigger DHKT_TriggerSendNotiAndEmail on DHKT_Notification__c(
@@ -13,8 +13,10 @@ trigger DHKT_TriggerSendNotiAndEmail on DHKT_Notification__c(
   if (Trigger.isInsert && Trigger.isBefore || Trigger.isUpdate) {
     for (DHKT_Notification__c noti : Trigger.new) {
       String bodyPlainText;
-      bodyPlainText = noti.Body__c;
-      noti.Body_Plain_Text__c = bodyPlainText.replaceAll('<[^>]+>', '');
+      if (noti.Body__c != null) {
+        bodyPlainText = noti.Body__c;
+        noti.Body_Plain_Text__c = bodyPlainText.replaceAll('<[^>]+>', '');
+      }
     }
   }
   if (Trigger.isAfter) {
@@ -25,6 +27,7 @@ trigger DHKT_TriggerSendNotiAndEmail on DHKT_Notification__c(
         Faculty__c,
         Activity_Class__c,
         Student__r.email__c,
+        Student__c,
         From__c,
         Title__c,
         Body_Plain_Text__c
