@@ -2,13 +2,12 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-01-2023
+ * @last modified on  : 04-27-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
   fetchData: function (cmp, event) {
     let recordId = cmp.get("v.recordId");
-    console.log("recordId: ", recordId);
     if (recordId) {
       var action = cmp.get("c.getRequest");
 
@@ -19,12 +18,10 @@
       action.setCallback(this, function (response) {
         var state = response.getState();
         var responseData = response.getReturnValue()[0];
-        console.log("state: ", state);
         if (state === "SUCCESS") {
-          console.log("responseData fetchData: ", responseData);
           cmp.set("v.responseData", responseData);
           if (responseData && responseData.Request_Status__c == "New") {
-            cmp.set("v.isEditPage", true);
+            this.validateEditRecord(cmp);
           }
           cmp.set(
             "v.isShowRequestInfo",
@@ -82,6 +79,25 @@
           this.handlePickListValues(response.getReturnValue())
         );
         // this.setFacilityOptions(cmp, event);
+      } else {
+        var message = response.getReturnValue();
+        if (message) {
+          this.showToast("error", message);
+        }
+      }
+    });
+    $A.enqueueAction(action);
+  },
+  validateEditRecord: function (cmp) {
+    var action = cmp.get("c.validateEditRequest");
+    let recordId = cmp.get("v.recordId");
+    action.setParams({
+      requestId: recordId
+    });
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        cmp.set("v.isEditPage", response.getReturnValue());
       } else {
         var message = response.getReturnValue();
         if (message) {
@@ -151,8 +167,6 @@
         classroom: facility.Classroom__c
       });
     }
-    console.log("facilitiesJson: ", facilitiesJson);
-    console.log("facilitiesArray: ", JSON.stringify(facilitiesArray));
 
     var action = cmp.get("c.saveFacilityOptions");
 
@@ -162,7 +176,6 @@
     });
     action.setCallback(this, function (response) {
       var state = response.getState();
-      console.log("state: ", state);
       if (state === "SUCCESS") {
         this.showToast("success", "Save successfully.");
       } else {

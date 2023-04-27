@@ -2,22 +2,18 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-01-2023
+ * @last modified on  : 04-27-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
   init: function (cmp, event, helper) {
-    console.log("init...");
     helper.fetchData(cmp, event);
     helper.getFacilities(cmp, event);
     helper.fetchFacilityOptions(cmp, event);
   },
-  onRecordLoad: function (cmp, event, helper) {
-    console.log("onRecordLoad...");
-  },
+  onRecordLoad: function (cmp, event, helper) {},
   onSaveClick: function (cmp, event, helper) {
     var reqType = cmp.get("v.responseData").Request_Type__c;
-    console.log("reqType: ", reqType);
     if (reqType != "Facility Request") {
       cmp.find("recordEditForm").submit() &&
         helper.showToast("success", "Save successfully.");
@@ -27,7 +23,6 @@
   },
   onCancelClick: function (cmp, event, helper) {
     $A.get("e.force:refreshView").fire();
-    cmp.set("v.isEditPage", false);
   },
   onAddFacility: function (cmp, event) {
     let facilities = cmp.get("v.facilities");
@@ -43,7 +38,6 @@
     let facilities = cmp.get("v.facilities");
     let itemIndex = event.getSource().get("v.value");
     let removedValue = event.getParam("value");
-    console.log("removedValue: ", removedValue);
     facilities.splice(itemIndex, 1);
     cmp.set("v.facilities", facilities);
   },
@@ -58,9 +52,7 @@
     }
     cmp.set("v.facilities", facilities);
   },
-  requestRecordUpdated: function (cmp, event, helper) {
-    console.log("requestRecordUpdated...");
-  },
+  requestRecordUpdated: function (cmp, event, helper) {},
   onCreateSuccess: function (cmp, event, helper) {
     helper.showToast("success", "Save successfully.");
   },
