@@ -2,7 +2,7 @@
   @description       : 
   @author            : Ba Truong Nguyen
   @group             : 
-  @last modified on  : 04-01-2023
+  @last modified on  : 05-27-2023
   @last modified by  : Ba Truong Nguyen
 -->
 <aura:component
@@ -25,13 +25,13 @@
 
   <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
-  <force:recordData
+  <!-- <force:recordData
     aura:id="requestLoader"
     recordId="{!v.recordId}"
     fields="Name, Student__c, Student__r.Name, Request_Type__c, Request_Status__c"
     targetFields="{!v.requestRecords}"
     recordUpdated="{!c.requestRecordUpdated}"
-  />
+  /> -->
   <aura:if isTrue="{!v.responseData.Request_Status__c == 'Rejected'}">
     <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
       <span class="slds-assistive-text">warning</span>

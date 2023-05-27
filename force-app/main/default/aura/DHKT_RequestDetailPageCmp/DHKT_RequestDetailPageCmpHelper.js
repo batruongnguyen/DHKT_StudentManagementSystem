@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-27-2023
+ * @last modified on  : 05-27-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -10,10 +10,7 @@
     let recordId = cmp.get("v.recordId");
     if (recordId) {
       var action = cmp.get("c.getRequest");
-
-      action.setParams({
-        recordId: recordId
-      });
+      action.setParams({recordId});
 
       action.setCallback(this, function (response) {
         var state = response.getState();
