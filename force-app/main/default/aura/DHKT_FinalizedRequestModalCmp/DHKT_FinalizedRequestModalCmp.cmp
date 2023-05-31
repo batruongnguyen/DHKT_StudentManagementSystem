@@ -2,7 +2,7 @@
   @description       : 
   @author            : Ba Truong Nguyen
   @group             : 
-  @last modified on  : 04-01-2023
+  @last modified on  : 05-31-2023
   @last modified by  : Ba Truong Nguyen
 -->
 
@@ -12,7 +12,15 @@
   controller="DHKT_ActionRequestController"
 >
   <aura:html aura:id="discardModalStyle" tag="style">
-    .slds-modal__container { width: 800px; max-width: 800px; min-width: 800px;}
+    .slds-modal__container { min-width: 70%;outline:none;} .slds-modal__content
+    { box-shadow: none!important;}
+    .slds-modal__content.slds-p-around--medium{background-color: transparent
+    !important;display:contents;}
+    .slds-button__icon.slds-button__icon_large.slds-button_icon-inverse{color:transparent
+    !important; display:none !important;}
+    .slds-button.slds-button_icon.slds-modal__close.closeIcon.slds-button_icon-bare.slds-button_icon-inverse{display:none;}
+    .quick-actions-panel.slds-modal__content.slds-p-around--medium { display:
+    contents; }
   </aura:html>
   <aura:attribute name="recordId" type="string" />
   <aura:handler name="init" value="{!this}" action="{!c.init}" />
@@ -31,6 +39,13 @@
           title="Close"
           onclick="{!c.handleExit}"
         >
+          <lightning:icon
+            iconName="utility:close"
+            alternativeText="Close!"
+            title="Close"
+            variant="inverse"
+            size="small"
+          />        
           <span class="slds-assistive-text">Close</span>
         </button>
         <div class="slds-text-heading_medium">Finalized Request</div>
