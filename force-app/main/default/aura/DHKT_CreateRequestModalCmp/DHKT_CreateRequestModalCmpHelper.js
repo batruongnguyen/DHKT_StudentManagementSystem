@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-23-2023
+ * @last modified on  : 06-07-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -39,9 +39,9 @@
   },
   validate: function (cmp) {
     var isValid = true;
-    var inputFields = cmp.find("inputField");
-    for (var i = 0; i < inputFields.length; i++) {
-      isValid = inputFields[i].reportValidity() && isValid;
+    var inputField = cmp.find("required_field");
+    for (var i = 0; i < inputField.length; i++) {
+      isValid = inputField[i].reportValidity() && isValid;
     }
     return isValid;
   },

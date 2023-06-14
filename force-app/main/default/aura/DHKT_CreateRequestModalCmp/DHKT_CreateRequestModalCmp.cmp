@@ -2,7 +2,7 @@
   @description       : 
   @author            : Ba Truong Nguyen
   @group             : 
-  @last modified on  : 03-28-2023
+  @last modified on  : 06-07-2023
   @last modified by  : Ba Truong Nguyen
 -->
 <aura:component
@@ -69,6 +69,7 @@
           <div class="slds-grid slds-wrap slds-form_stacked slds-form">
             <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
               <lightning:inputField
+                aura:id="required_field"
                 fieldName="Request_Type__c"
                 value="{!v.selectedRequestType}"
                 disabled="{!v.recordId}"
@@ -99,6 +100,7 @@
             </div>
             <div class="slds-size--1-of-2 slds-p-horizontal_x-small">
               <lightning:inputField
+                aura:id="required_field"
                 fieldName="Request_Header__c"
                 value="{!v.selectedRequestHeader}"
                 disabled="{!v.recordId}"

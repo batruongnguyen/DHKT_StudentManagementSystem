@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 03-25-2023
+ * @last modified on  : 06-07-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 ({
@@ -33,12 +33,9 @@
     $A.get("e.force:refreshView").fire();
   },
   onSave: function (cmp, event, helper) {
-    console.log("onSave...");
     event.preventDefault();
-    const fields = event.getParam("fields");
-    // helper.validate(cmp) &&
+    helper.validate(cmp) &&
     cmp.find("recordEditForm").submit();
-    cmp.find("recordForm").submit(fields);
   },
   onCancel: function (cmp, event, helper) {
     helper.closeCompletely(cmp, event, helper);
