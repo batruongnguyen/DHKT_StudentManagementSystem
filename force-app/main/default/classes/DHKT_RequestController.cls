@@ -75,6 +75,7 @@ public with sharing class DHKT_RequestController {
           Request__c = :requestId
           OR Request__c = NULL
           OR Request__r.Request_Status__c = 'Finalized'
+          OR Request__r.Request_Status__c = 'Rejected'
         ORDER BY Zone_Area__c
       ];
     } catch (Exception e) {

@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-16-2023
+ * @last modified on  : 06-16-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 public without sharing class DHKT_StudentAppController {
@@ -57,10 +57,11 @@ public without sharing class DHKT_StudentAppController {
               Report_Registration_Method__c,
               Is_My_Request__c
             FROM Requests__r
+            ORDER BY CreatedDate DESC
           )
         FROM DHKT_Student__c
         WHERE Email__c = :currentUser.Email
-        ORDER BY CreatedDate DESC
+        ORDER BY Id DESC
         LIMIT 1
       ];
       return JSON.serialize(student);
