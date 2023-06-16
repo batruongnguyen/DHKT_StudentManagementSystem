@@ -2,7 +2,7 @@
  * @description       :
  * @author            : Ba Truong Nguyen
  * @group             :
- * @last modified on  : 04-13-2023
+ * @last modified on  : 06-16-2023
  * @last modified by  : Ba Truong Nguyen
  **/
 public with sharing class DHKT_RequestController {
@@ -75,6 +75,7 @@ public with sharing class DHKT_RequestController {
           Request__c = :requestId
           OR Request__c = NULL
           OR Request__r.Request_Status__c = 'Finalized'
+        ORDER BY Zone_Area__c
       ];
     } catch (Exception e) {
       throw new AuraHandledException(
@@ -118,6 +119,12 @@ public with sharing class DHKT_RequestController {
       System.debug('Fail to get Student Information: ' + e.getMessage());
       return null;
     }
+  }
+
+  @AuraEnabled
+  public static Boolean validateEditRequest(String requestId) {
+    List<DHKT_Request__c> reqs = [SELECT Id, Is_My_Request__c, Request_Status__c FROM DHKT_Request__c WHERE Id =: requestId];
+    return reqs[0].Is_My_Request__c ? reqs[0].Is_My_Request__c : false;
   }
 
   @AuraEnabled
